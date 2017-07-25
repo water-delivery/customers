@@ -8,13 +8,13 @@ const {
 const authController = require('../controllers/auth');
 
 /* Create user */
-router.post('/auth/signup', validations.create, authController.signup);
+router.post('/signup', validations.create, authController.signup);
 
 /* Signin */
-router.post('/auth/signin', authController.signin);
+router.post('/signin', authController.signin);
 
 /* Signin */
-router.post('/auth/signout', authController.signout);
+router.post('/signout', authController.signout);
 
 
 module.exports = router;

@@ -50,3 +50,5 @@ dist
 
 # temp folder
 temp/*
+
+keys.json

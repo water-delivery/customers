@@ -9,13 +9,13 @@ const validations = {
   PASSWORD_NOT_MATCHED: {
     message: 'Password didn\'t match with the given username'
   }
-}
+};
+
 module.exports = {
-  signup: function (req, res) {
+  signup: (req, res) => {
     const { firstName, lastName, password, contact, description, email, meta } = req.body;
     // All validations should be done by now!
     // TODO: Get other possible information from the device he is logging in!
-    console.log(req.body);
     const userObject = {
       firstName,
       lastName,
@@ -51,7 +51,7 @@ module.exports = {
             accessToken: newToken.token
           })
         })
-        .catch(next)
+        .catch(next);
       },
     ], function final(error, user) {
       if (error) {
@@ -74,7 +74,7 @@ module.exports = {
     });
   },
 
-  signin: function (req, res) {
+  signin: (req, res) => {
     // All validations should be done by now!
     const { contact, password, meta } = req.body;
     return async.waterfall([
@@ -121,6 +121,6 @@ module.exports = {
     });
   },
 
-  signout: function (req, res) {
+  signout: (req, res) => {
   },
 }
