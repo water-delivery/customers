@@ -6,6 +6,7 @@ const smsService = require('../services').sms;
 const { generateRandomNumber, generateOTPTextMessage } = require('../utils');
 const {
   CONTACT_NUMBER_VERIFICATION,
+  ACCOUNT_AUTHENTICATION,
   USER_NOT_FOUND,
   PASSWORD_NOT_MATCHED,
   CONTACT_ALREADY_REGISTERED,
@@ -91,7 +92,7 @@ module.exports = {
 
   signin: (req, res) => {
     // All validations should be done by now!
-    const { contact, password, meta } = req.body;
+    const { contact, password, otp, meta } = req.body;
     return async.waterfall([
       function findUser(next) {
         User.findOne({ where: { contact } })
@@ -101,13 +102,28 @@ module.exports = {
         })
         .catch(next);
       },
-      function validatePassword(user, next) {
-        return User.validatePassword(password, user.password)
-          .then(isValid => {
-            if (isValid) return next(null, user);
-            return res.status(401).send(PASSWORD_NOT_MATCHED);
-          })
-          .catch(next);
+      // function validatePassword(user, next) {
+      //   return User.validatePassword(password, user.password)
+      //     .then(isValid => {
+      //       if (isValid) return next(null, user);
+      //       return res.status(401).send(PASSWORD_NOT_MATCHED);
+      //     })
+      //     .catch(next);
+      // },
+      function validateOTP(user, next) {
+        const criteria = {
+          type: ACCOUNT_AUTHENTICATION,
+          token: contact
+        };
+        return redisService.findOne(criteria)
+        .then(value => {
+          if (!value) return next(INVALID_OTP);
+          if (value.data !== otp) return next(OTP_MISMATCH);
+          // Dont wait for this response
+          redisService.destroy(criteria);
+          return next(null, user);
+        })
+        .catch(next);
       },
       function generateToken(user, next) {
         return AccessToken.create({
@@ -147,6 +163,7 @@ module.exports = {
   sendOTP: (req, res) => {
     const contact = req.params.contact;
     const action = req.body.action || 'signup';
+    const type = action === 'signup' ? CONTACT_NUMBER_VERIFICATION : ACCOUNT_AUTHENTICATION;
     async.waterfall([
       function checkIfContactExists(next) {
         if (action === 'signin') return next();
@@ -164,7 +181,7 @@ module.exports = {
       // Create a redis record
       function LogInRedis(next) {
         redisService.create({
-          type: CONTACT_NUMBER_VERIFICATION,
+          type,
           data: generateRandomNumber(),
           token: contact,
         })

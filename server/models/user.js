@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const config = require('../config');
 
 module.exports = function(sequelize, DataTypes) {
@@ -7,8 +7,8 @@ module.exports = function(sequelize, DataTypes) {
     lastName: DataTypes.STRING,
     password: {
       type: DataTypes.STRING,
-      validate: { min: 6 },
-      allowNull: false
+      // validate: { min: 6 },
+      // allowNull: false
     },
     avatar: DataTypes.STRING,
     contact: {
@@ -32,15 +32,15 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     hooks: {
       beforeCreate: (user, options) => {
-        return User.hashPassword(user.password).then(hashedPw => {
-          user.password = hashedPw;
-        });
+        // return User.hashPassword(user.password).then(hashedPw => {
+        //   user.password = hashedPw;
+        // });
       },
       beforeUpdate: (user, options) => {
-        if (!user.password) return;
-        return User.hashPassword(user, (err, hash) => {
-          user.password = hash;
-        });
+        // if (!user.password) return;
+        // return User.hashPassword(user, (err, hash) => {
+        //   user.password = hash;
+        // });
       },
       afterCreate: () => {
         // Do stuff like logging, sending notifications or emails
@@ -68,24 +68,24 @@ module.exports = function(sequelize, DataTypes) {
     });
   };
 
-  User.validatePassword = (password, hash) => {
-    return new Promise((resolve, reject) =>
-      bcrypt.compare(
-        password,
-        hash,
-        (err, isValid) => (err ? reject(err) : resolve(isValid))
-      )
-    );
-  };
+  // User.validatePassword = (password, hash) => {
+  //   return new Promise((resolve, reject) =>
+  //     bcrypt.compare(
+  //       password,
+  //       hash,
+  //       (err, isValid) => (err ? reject(err) : resolve(isValid))
+  //     )
+  //   );
+  // };
 
-  User.hashPassword = (password) => {
-    return new Promise((resolve, reject) =>
-      bcrypt
-        .hash(password, config.bcrypt.rounds)
-        .then(hash => resolve(hash))
-        .catch(err => reject())
-    );
-  };
+  // User.hashPassword = (password) => {
+  //   return new Promise((resolve, reject) =>
+  //     bcrypt
+  //       .hash(password, config.bcrypt.rounds)
+  //       .then(hash => resolve(hash))
+  //       .catch(err => reject())
+  //   );
+  // };
 
   return User;
 };

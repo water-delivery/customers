@@ -16,6 +16,7 @@ module.exports = {
     message: 'Invalid access token sent'
   },
   CONTACT_NUMBER_VERIFICATION: 'contactNumberVerification',
+  ACCOUNT_AUTHENTICATION: 'accountAuthentication',
   CONTACT_ALREADY_REGISTERED: {
     code: 'CONTACT_ALREADY_REGISTERED',
     message: 'Already registered! Please try with a different number'

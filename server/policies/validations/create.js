@@ -7,10 +7,10 @@ module.exports = function (req, res, next) {
       message: 'Required field `contact` is not sent.'
     });
   }
-  if (!password) {
-    return res.status(400).send({
-      message: 'Required field `password` is not sent.'
-    });
-  }
+  // if (!password) {
+  //   return res.status(400).send({
+  //     message: 'Required field `password` is not sent.'
+  //   });
+  // }
   return next();
 }

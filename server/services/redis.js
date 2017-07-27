@@ -22,6 +22,7 @@ const dataMissingError = new Error('required parameter data missing');
 
 const expirations = {
   contactNumberVerification: 60 * 60, // 1 hour
+  accountAuthentication: 60 * 60, // 1 hour
   emailVerification: 14 * 24 * 60 * 60, // 14 days
   accessToken: 300 // 5 min
 };
@@ -35,7 +36,6 @@ const validTokenTypes = Object.keys(expirations);
    */
 const create = ({ type, data, token = generateUUID() }) =>
   new Promise((resolve, reject) => {
-    console.log(type, data, token);
     if (typeof type !== 'string') return reject(typeMissingError);
     if (!validTokenTypes.includes(type)) return reject(typeNotSupportedError);
     if (typeof type !== 'string') return reject(tokenMissingError);
