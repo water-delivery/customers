@@ -16,8 +16,11 @@
     "crypto": "^0.0.3",
     "express": "^4.15.3",
     "morgan": "^1.8.2",
+    "nconf": "^0.8.4",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
+    "plivo": "^0.4.1",
+    "redis": "^2.7.1",
     "sequelize": "^4.3.0"
   },
   "devDependencies": {

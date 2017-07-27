@@ -14,5 +14,19 @@ module.exports = {
   ACCESS_TOKEN_INVALID: {
     code: 'ACCESS_TOKEN_INVALID',
     message: 'Invalid access token sent'
+  },
+  CONTACT_NUMBER_VERIFICATION: 'contactNumberVerification',
+  CONTACT_ALREADY_REGISTERED: {
+    code: 'CONTACT_ALREADY_REGISTERED',
+    message: 'Already registered! Please try with a different number'
+  },
+  OTP_MISMATCH: {
+    code: 'OTP_MISMATCH',
+    message: 'OTP sent did not match with the server copy!'
+  },
+  INVALID_OTP: {
+    code: 'INVALID_OTP',
+    message: 'OTP is either expired or  invalid one. Please request for a new OTP before proceeding further'
   }
-}
+};
+

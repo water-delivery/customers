@@ -20,14 +20,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     description: DataTypes.STRING,
     email: DataTypes.STRING,
-    verifiedAt: {
-      type: DataTypes.DATE
-    },
+    // verifiedAt: {
+    //   type: DataTypes.DATE
+    // },
     roles: {
       type: DataTypes.ENUM,
       values: ['user', 'admin'],
       defaultValue: 'user'
-    }
+    },
+
   }, {
     hooks: {
       beforeCreate: (user, options) => {
