@@ -3,6 +3,7 @@ const created = require('./created');
 const serverError = require('./serverError');
 const negotiate = require('./negotiate');
 const notFound = require('./notFound');
+const noContent = require('./noContent');
 
 module.exports = (req, res, next) => {
   res.ok = ok(res);
@@ -10,5 +11,6 @@ module.exports = (req, res, next) => {
   res.serverError = serverError(res);
   res.negotiate = negotiate(res);
   res.notFound = notFound(res);
+  res.noContent = noContent(res);
   next();
 };

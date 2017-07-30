@@ -15,7 +15,7 @@ router.post('/signup', validations.create, authController.signup);
 router.post('/signin', authController.signin);
 
 /* Signin */
-router.post('/signout', authController.signout);
+router.delete('/signout', authController.signout);
 
 /* Accepts contact as params and send OTP to client */
 router.post('/otp/:contact', isServiceAccount, authController.sendOTP);

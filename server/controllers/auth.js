@@ -3,7 +3,11 @@ const User = require('../models').user;
 const AccessToken = require('../models').accessToken;
 const redisService = require('../services').redis;
 const smsService = require('../services').sms;
-const { generateRandomNumber, generateOTPTextMessage } = require('../utils');
+const {
+  generateRandomNumber,
+  generateOTPTextMessage,
+  getToken
+} = require('../utils');
 const {
   CONTACT_NUMBER_VERIFICATION,
   ACCOUNT_AUTHENTICATION,
@@ -154,7 +158,15 @@ module.exports = {
     });
   },
 
-  signout: (req, res) => res.status(200).send({}),
+  signout: (req, res) => {
+    AccessToken.destroy({
+      where: {
+        token: getToken(req)
+      }
+    })
+    .then(res.noContent)
+    .catch(res.serverError);
+  },
 
   /**
    * Sends a One Time Password (OTP) for validating contact info
