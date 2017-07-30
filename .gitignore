@@ -52,3 +52,4 @@ dist
 temp/*
 
 keys.json
+credentials/*

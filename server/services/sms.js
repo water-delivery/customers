@@ -1,8 +1,11 @@
 const plivo = require('plivo');
+const nconf = require('nconf');
+const plivoConfig = require('../config').plivo;
 
+nconf.argv().env().file('credentials/plivo.json');
 const p = plivo.RestAPI({
-  authId: process.env.PLIVO_AUTH_ID || 'MAZDY2YZM0ZGFHY2VLMW',
-  authToken: process.env.PLIVO_AUTH_TOKEN || 'NmM5YTY5YWJhNDBmMDkxMjI3NGJhNzFhZmI1YmQ2'
+  authId: nconf.get('authId') || plivoConfig.authId,
+  authToken: nconf.get('authToken') || plivoConfig.authToken
 });
 
 module.exports = {

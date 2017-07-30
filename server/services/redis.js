@@ -3,14 +3,14 @@ const { generateUUID } = require('../utils');
 const nconf = require('nconf');
 const redisConfig = require('../config').redis;
 
-nconf.argv().env().file('keys.json');
+nconf.argv().env().file('credentials/redis.json');
 
 // const redisClient = redis.createClient(sails.config.connections.redis);
 const redisClient = redis.createClient(
-  nconf.get('redisPort') || redisConfig.REDIS_PORT,
-  nconf.get('redisHost') || redisConfig.REDIS_HOST,
+  nconf.get('redisPort') || redisConfig.redisPort,
+  nconf.get('redisHost') || redisConfig.redisHost,
   {
-    auth_pass: nconf.get('redisKey') || redisConfig.REDIS_KEY,
+    auth_pass: nconf.get('redisKey') || redisConfig.redisKey,
     return_buffers: true
   }
 ).on('error', (err) => console.error('ERR:REDIS:', err));

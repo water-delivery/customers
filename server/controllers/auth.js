@@ -37,7 +37,8 @@ module.exports = {
         return redisService.findOne(criteria)
         .then(value => {
           if (!value) return next(INVALID_OTP);
-          if (value.data !== otp) return next(OTP_MISMATCH);
+          console.log(typeof value.data, typeof otp);
+          if (parseInt(value.data, 10) !== otp) return next(OTP_MISMATCH);
           // Dont wait for this response
           redisService.destroy(criteria);
           return next();
@@ -97,7 +98,7 @@ module.exports = {
       function findUser(next) {
         User.findOne({ where: { contact } })
         .then(user => {
-          if (!user) return res.status(404).send(USER_NOT_FOUND);
+          if (!user) return res.notFound(USER_NOT_FOUND);
           return next(null, user);
         })
         .catch(next);
@@ -118,7 +119,8 @@ module.exports = {
         return redisService.findOne(criteria)
         .then(value => {
           if (!value) return next(INVALID_OTP);
-          if (value.data !== otp) return next(OTP_MISMATCH);
+          console.log(typeof value.data, typeof otp);
+          if (parseInt(value.data, 10) !== otp) return next(OTP_MISMATCH);
           // Dont wait for this response
           redisService.destroy(criteria);
           return next(null, user);
@@ -162,26 +164,32 @@ module.exports = {
    */
   sendOTP: (req, res) => {
     const contact = req.params.contact;
-    const action = req.body.action || 'signup';
-    const type = action === 'signup' ? CONTACT_NUMBER_VERIFICATION : ACCOUNT_AUTHENTICATION;
+    // const action = req.body.action || 'signup';
+    let operationType = ACCOUNT_AUTHENTICATION;
+    let operation = 'signin';
     async.waterfall([
       function checkIfContactExists(next) {
-        if (action === 'signin') return next();
+        // if (action === 'signin') return next();
         return User.findOne({
           where: {
             contact
           }
         })
         .then(record => {
-          if (!record) return next();
-          return res.status(409).send(CONTACT_ALREADY_REGISTERED);
+          // if (!record) return next();
+          // return res.status(409).send(CONTACT_ALREADY_REGISTERED);
+          if (!record) {
+            operation = 'signup';
+            operationType = CONTACT_NUMBER_VERIFICATION;
+          }
+          return next();
         })
         .catch(next);
       },
       // Create a redis record
       function LogInRedis(next) {
         redisService.create({
-          type,
+          type: operationType,
           data: generateRandomNumber(),
           token: contact,
         })
@@ -199,6 +207,15 @@ module.exports = {
         .then(response => next(null, value, response))
         .catch(next);
       }
-    ], (err, result) => res.ok(result));
+    ], (err, result) => {
+      if (err) return res.serverError(err);
+      const { type, data, token } = result;
+      return res.ok({
+        operation,
+        type,
+        data,
+        token
+      });
+    });
   }
 };

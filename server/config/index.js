@@ -1,9 +1,11 @@
-const bcrypt = require('./bcrypt');
+// const bcrypt = require('./bcrypt');
 const connections = require('./connections');
 const redis = require('./redis');
+const plivo = require('./plivo');
 
 module.exports = {
-  bcrypt,
+  // bcrypt,
   connections,
-  redis
+  redis,
+  plivo
 };
