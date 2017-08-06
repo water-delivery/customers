@@ -21,10 +21,7 @@ module.exports = {
     // Prints the complete response
     return new Promise((resolve, reject) => {
       p.send_message(params, (status, response) => {
-        console.log('Status: ', status);
-        console.log('API Response:\n', response);
-        console.log('Message UUID:\n', response.message_uuid);
-        console.log('Api ID:\n', response.api_id);
+        console.log('Message response status: ', status);
         if (status >= 400) return reject({ status, response });
         return resolve({ status, response });
       });

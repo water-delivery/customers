@@ -3,6 +3,8 @@ const User = require('../models').user;
 const AccessToken = require('../models').accessToken;
 const redisService = require('../services').redis;
 const smsService = require('../services').sms;
+const notificationService = require('../services').notification;
+
 const {
   generateRandomNumber,
   generateOTPTextMessage,
@@ -20,13 +22,12 @@ const {
 
 module.exports = {
   signup: (req, res) => {
-    const { firstName, lastName, password, otp, contact, description, email, meta } = req.body;
+    const { firstName, lastName, otp, contact, description, email, meta } = req.body;
     // All validations should be done by now!
     // TODO: Get other possible information from the device he is logging in!
     const userObject = {
       firstName,
       lastName,
-      password,
       contact,
       description,
       email,
@@ -41,7 +42,6 @@ module.exports = {
         return redisService.findOne(criteria)
         .then(value => {
           if (!value) return next(INVALID_OTP);
-          console.log(typeof value.data, typeof otp);
           if (parseInt(value.data, 10) !== otp) return next(OTP_MISMATCH);
           // Dont wait for this response
           redisService.destroy(criteria);
@@ -91,13 +91,26 @@ module.exports = {
         }
         return res.status(400).send(error);
       }
+      const { token, deviceId } = req.body;
+      if (token && deviceId) {
+        notificationService.subscribe({
+          userId: user.id,
+          token,
+          deviceId,
+          contact,
+          firstName,
+          status: 'loggedIn'
+        })
+        .then(logger.debug)
+        .catch(logger.error);
+      }
       return res.status(201).send(user);
     });
   },
 
   signin: (req, res) => {
     // All validations should be done by now!
-    const { contact, password, otp, meta } = req.body;
+    const { contact, otp, meta } = req.body;
     return async.waterfall([
       function findUser(next) {
         User.findOne({ where: { contact } })
@@ -123,7 +136,6 @@ module.exports = {
         return redisService.findOne(criteria)
         .then(value => {
           if (!value) return next(INVALID_OTP);
-          console.log(typeof value.data, typeof otp);
           if (parseInt(value.data, 10) !== otp) return next(OTP_MISMATCH);
           // Dont wait for this response
           redisService.destroy(criteria);
@@ -137,6 +149,12 @@ module.exports = {
           device: meta && meta.device
         })
         .then(newRecord => {
+          logger.info({
+            action: 'signin',
+            data: {
+              firstName: user.firstName, token: newRecord.token
+            }
+          });
           return next(null, {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -152,9 +170,19 @@ module.exports = {
       }
     ], (err, user) => {
       if (err) {
-        return res.status(401).send(err);
+        return res.unAuthorized(err);
       }
-      return res.status(200).send(user);
+      const { deviceId } = req.body;
+      if (deviceId) {
+        notificationService.update({
+          userId: user.id,
+          deviceId,
+          status: 'loggedIn'
+        })
+        .then(logger.debug)
+        .catch(logger.error);
+      }
+      return res.ok(user);
     });
   },
 
@@ -164,7 +192,18 @@ module.exports = {
         token: getToken(req)
       }
     })
-    .then(res.noContent)
+    .then(affectedRows => {
+      const { deviceId } = req.params;
+      if (deviceId) {
+        notificationService.update({
+          deviceId,
+          status: 'anon'
+        })
+        .then(logger.debug)
+        .catch(logger.error);
+      }
+      return res.noContent(affectedRows);
+    })
     .catch(res.serverError);
   },
 
@@ -215,12 +254,27 @@ module.exports = {
           return res.negotiate();
         }
 
+        logger.error({
+          tag: 'info',
+          controller: 'auth',
+          action: 'sendOTP',
+          data: value,
+        });
+
         smsService.send(generateOTPTextMessage(value.data), contact)
         .then(response => next(null, value, response))
         .catch(next);
       }
     ], (err, result) => {
-      if (err) return res.serverError(err);
+      if (err) {
+        logger.error({
+          tag: 'info',
+          controller: 'auth',
+          action: 'sendOTP',
+          data: err,
+        });
+        return res.serverError(err);
+      }
       const { type, data, token } = result;
       return res.ok({
         operation,

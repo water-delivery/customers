@@ -13,7 +13,7 @@ const config = {
     "mocha": true
   },
   "globals": {
-    "sails": true
+    "logger": true
   }
 };
 console.log('models path', `${__dirname}/server/models`);

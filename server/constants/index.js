@@ -28,6 +28,9 @@ module.exports = {
   INVALID_OTP: {
     code: 'INVALID_OTP',
     message: 'OTP is either expired or  invalid one. Please request for a new OTP before proceeding further'
-  }
+  },
+  USER_UNAUTHENTICATED: 'UNAUTHENTICATED',
+  USER_AUTHENTICATED: 'AUTHENTICATED',
+  USER_ADMIN: 'ADMIN',
 };
 

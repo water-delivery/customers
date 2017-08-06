@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     include: [{
       model: User,
       required: true,
-      attributes: ['firstName', 'lastName', 'avatar', 'contact', 'description', 'email', 'roles']
+      attributes: ['id', 'firstName', 'lastName', 'avatar', 'contact', 'description', 'email', 'roles']
     }]
   })
   .then(record => {

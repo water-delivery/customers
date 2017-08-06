@@ -19,6 +19,4 @@ router.get('/user/:username', loadUser, userController.findOne);
 /* */
 router.put('/user', loadUser, validations.update, userController.update);
 
-
-
 module.exports = router;

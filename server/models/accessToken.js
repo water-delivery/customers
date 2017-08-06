@@ -44,7 +44,6 @@ module.exports = function(sequelize, DataTypes) {
     // }
   });
   AccessToken.associate = (models) => {
-    console.log(models.user);
     AccessToken.belongsTo(models.user, {
       // as: 'user'
       // foreignKey: 'user'
