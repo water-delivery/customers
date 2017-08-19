@@ -112,7 +112,7 @@ module.exports = {
 
   signin: (req, res) => {
     // All validations should be done by now!
-    const { contact, otp, meta } = req.body;
+    const { contact, otp, meta, token } = req.body;
     return async.waterfall([
       function findUser(next) {
         User.findOne({ where: { contact } })
@@ -181,6 +181,7 @@ module.exports = {
           userId: user.id,
           userType: 'user',
           deviceId,
+          token,
           status: 'loggedIn'
         })
         .then(logger.debug)
