@@ -19,6 +19,12 @@ global.logger = logger;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use((req, res, next) => {
+  req.options = req.options || {};
+  req.options.deviceId = req.headers['device-id'];
+  return next();
+});
+
 // Attaching custom response methods to res object
 app.use(responses);
 

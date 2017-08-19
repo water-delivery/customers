@@ -13,7 +13,11 @@ module.exports = {
   credentials: {
     notification: {
       username: 'arkraiders',
-      password: process.env.NOTIFICATION_SERVICE_BASIC_AUTH || 'notification'
+      password: process.env.NOTIFICATION_SERVICE_BASIC_AUTH_PASSWORD || 'notification'
+    },
+    basicAuth: {
+      username: 'arkraiders',
+      password: process.env.BASIC_AUTH_PASSWORD || 'auth'
     }
   }
 };

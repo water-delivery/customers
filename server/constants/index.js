@@ -15,6 +15,17 @@ module.exports = {
     code: 'ACCESS_TOKEN_INVALID',
     message: 'Invalid access token sent'
   },
+  AUTHENTICATION_NEEDED: {
+    code: 'AUTHENTICATION_NEEDED',
+    message: 'Please signin to peform this action.'
+  },
+  AUTHENTICATION_NEEDED_AS_ADMIN: {
+    code: 'AUTHENTICATION_NEEDED_AS_ADMIN',
+    message: 'Admin level previliges required to peform this action.'
+  },
+  USER_UNAUTHENTICATED: 'UNAUTHENTICATED',
+  USER_AUTHENTICATED: 'AUTHENTICATED',
+  USER_ADMIN: 'ADMIN',
   CONTACT_NUMBER_VERIFICATION: 'contactNumberVerification',
   ACCOUNT_AUTHENTICATION: 'accountAuthentication',
   CONTACT_ALREADY_REGISTERED: {
@@ -29,8 +40,5 @@ module.exports = {
     code: 'INVALID_OTP',
     message: 'OTP is either expired or  invalid one. Please request for a new OTP before proceeding further'
   },
-  USER_UNAUTHENTICATED: 'UNAUTHENTICATED',
-  USER_AUTHENTICATED: 'AUTHENTICATED',
-  USER_ADMIN: 'ADMIN',
 };
 

@@ -5,6 +5,7 @@ const negotiate = require('./negotiate');
 const notFound = require('./notFound');
 const noContent = require('./noContent');
 const unAuthorized = require('./unAuthorized');
+const forbidden = require('./forbidden');
 
 module.exports = (req, res, next) => {
   res.ok = ok(res);
@@ -14,5 +15,6 @@ module.exports = (req, res, next) => {
   res.notFound = notFound(res);
   res.noContent = noContent(res);
   res.unAuthorized = unAuthorized(res);
+  res.forbidden = forbidden(res);
   next();
 };

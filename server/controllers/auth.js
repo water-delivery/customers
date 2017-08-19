@@ -91,10 +91,12 @@ module.exports = {
         }
         return res.status(400).send(error);
       }
-      const { token, deviceId } = req.body;
+      const { token } = req.body;
+      const { deviceId } = req.options;
       if (token && deviceId) {
         notificationService.subscribe({
           userId: user.id,
+          userType: 'user',
           token,
           deviceId,
           contact,
@@ -156,6 +158,7 @@ module.exports = {
             }
           });
           return next(null, {
+            id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
             avatar: user.avatar,
@@ -172,10 +175,11 @@ module.exports = {
       if (err) {
         return res.unAuthorized(err);
       }
-      const { deviceId } = req.body;
+      const { deviceId } = req.options;
       if (deviceId) {
         notificationService.update({
           userId: user.id,
+          userType: 'user',
           deviceId,
           status: 'loggedIn'
         })
@@ -193,7 +197,7 @@ module.exports = {
       }
     })
     .then(affectedRows => {
-      const { deviceId } = req.params;
+      const { deviceId } = req.options;
       if (deviceId) {
         notificationService.update({
           deviceId,
