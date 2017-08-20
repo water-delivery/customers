@@ -151,12 +151,6 @@ module.exports = {
           device: meta && meta.device
         })
         .then(newRecord => {
-          logger.info({
-            action: 'signin',
-            data: {
-              firstName: user.firstName, token: newRecord.token
-            }
-          });
           return next(null, {
             id: user.id,
             firstName: user.firstName,
@@ -177,6 +171,10 @@ module.exports = {
       }
       const { deviceId } = req.options;
       if (deviceId) {
+        logger.info({
+          action: 'update-subscription',
+          data: user
+        });
         notificationService.update({
           userId: user.id,
           userType: 'user',
