@@ -14,8 +14,6 @@ const {
   CONTACT_NUMBER_VERIFICATION,
   ACCOUNT_AUTHENTICATION,
   USER_NOT_FOUND,
-  PASSWORD_NOT_MATCHED,
-  CONTACT_ALREADY_REGISTERED,
   INVALID_OTP,
   OTP_MISMATCH
 } = require('../constants');
@@ -122,14 +120,6 @@ module.exports = {
         })
         .catch(next);
       },
-      // function validatePassword(user, next) {
-      //   return User.validatePassword(password, user.password)
-      //     .then(isValid => {
-      //       if (isValid) return next(null, user);
-      //       return res.status(401).send(PASSWORD_NOT_MATCHED);
-      //     })
-      //     .catch(next);
-      // },
       function validateOTP(user, next) {
         const criteria = {
           type: ACCOUNT_AUTHENTICATION,
@@ -180,6 +170,8 @@ module.exports = {
           userType: 'user',
           deviceId,
           token,
+          contact: user.contact,
+          firstName: user.firstName,
           status: 'loggedIn'
         })
         .then(logger.debug)

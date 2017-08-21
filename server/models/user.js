@@ -1,8 +1,5 @@
-// const bcrypt = require('bcrypt');
-const config = require('../config');
-
-module.exports = function(sequelize, DataTypes) {
-  var User = sequelize.define('user', {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     password: {
@@ -18,6 +15,9 @@ module.exports = function(sequelize, DataTypes) {
       max: 10,
       allowNull: false,
     },
+    // activeAddress: {
+    //   type: DataTypes.INTEGER
+    // },
     description: DataTypes.STRING,
     email: DataTypes.STRING,
     // verifiedAt: {
@@ -31,31 +31,15 @@ module.exports = function(sequelize, DataTypes) {
 
   }, {
     hooks: {
-      beforeCreate: (user, options) => {
-        // return User.hashPassword(user.password).then(hashedPw => {
-        //   user.password = hashedPw;
-        // });
+      beforeCreate: () => {
       },
-      beforeUpdate: (user, options) => {
-        // if (!user.password) return;
-        // return User.hashPassword(user, (err, hash) => {
-        //   user.password = hash;
-        // });
+      beforeUpdate: () => {
       },
       afterCreate: () => {
         // Do stuff like logging, sending notifications or emails
       }
     },
-    // classMethods: {
-    //   associate: function(models) {
-    //     // associations can be defined here
-    //     User.hasMany(models.accessToken, {
-    //       onDelete: 'cascade',
-    //       hooks: true,
-    //       as: 'tokens'
-    //     });
-    //   },
-    // },
+
     getterMethods: {
     }
   });
@@ -66,26 +50,13 @@ module.exports = function(sequelize, DataTypes) {
       hooks: true,
       as: 'tokens'
     });
+
+    User.hasMany(models.address, {
+      onDelete: 'cascade'
+    });
+
+    // User.hasOne(models.address, { as: 'activeAddress' });
   };
-
-  // User.validatePassword = (password, hash) => {
-  //   return new Promise((resolve, reject) =>
-  //     bcrypt.compare(
-  //       password,
-  //       hash,
-  //       (err, isValid) => (err ? reject(err) : resolve(isValid))
-  //     )
-  //   );
-  // };
-
-  // User.hashPassword = (password) => {
-  //   return new Promise((resolve, reject) =>
-  //     bcrypt
-  //       .hash(password, config.bcrypt.rounds)
-  //       .then(hash => resolve(hash))
-  //       .catch(err => reject())
-  //   );
-  // };
 
   return User;
 };

@@ -28,4 +28,19 @@ module.exports = {
     res.status(200).send({
       message: 'findMe'
     }),
+
+  updateAddress: (req, res) => {
+    const { activeAddress } = req.body || {};
+    const id = req.options.user.id;
+    if (!activeAddress) res.badRequest({ message: 'activeAddress is needed to update' });
+    return User.update({
+      activeAddress
+    }, {
+      where: {
+        id
+      }
+    })
+    .then(res.ok)
+    .catch(res.negotiate);
+  }
 };

@@ -4,7 +4,6 @@ const router = express.Router();
 const {
   loadUser,
   isAdmin,
-  validations,
 } = require('../policies');
 const userController = require('../controllers/user');
 
@@ -17,7 +16,7 @@ router.get('/users', loadUser, isAdmin, userController.findAll);
 /* */
 router.get('/user/:username', loadUser, userController.findOne);
 
-/* */
-router.put('/user', loadUser, validations.update, userController.update);
+/* Update active address */
+// router.put('/user/address', loadUser, loadAddress, userController.updateAddress);
 
 module.exports = router;
