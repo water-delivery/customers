@@ -24,10 +24,24 @@ module.exports = {
     .catch(res.negotiate);
   },
 
-  update: (req, res) =>
-    res.status(200).send({
-      message: 'findMe'
-    }),
+  update: (req, res) => {
+    const userId = req.options.user.id;
+    const { firstName, lastName, avatar, description, email } = req.body || {};
+    User.update({
+      firstName,
+      lastName,
+      avatar,
+      description,
+      email
+    }, {
+      where: {
+        id: userId
+      },
+      individualHooks: true
+    })
+    .then(([, affectedRows]) => res.ok(affectedRows))
+    .catch(res.negotiate);
+  },
 
   updateAddress: (req, res) => {
     const { activeAddress } = req.body || {};

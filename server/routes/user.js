@@ -19,4 +19,7 @@ router.get('/user/:username', loadUser, userController.findOne);
 /* Update active address */
 // router.put('/user/address', loadUser, loadAddress, userController.updateAddress);
 
+/* Update user information */
+router.put('/user', loadUser, userController.update);
+
 module.exports = router;
