@@ -1,0 +1,56 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:8.1.0
+
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: yarn
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: test
+          command: yarn test
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_test_results:
+          path: test-results.xml
+      - run:
+          name: Install google cloud sdk
+          command: |
+            wget https://dl.google.com/dl/cloudsdk/release/install_google_cloud_sdk.bash
+            bash ./install_google_cloud_sdk.bash --disable-prompts
+            source ~/google-cloud-sdk/path.bash.inc
+            echo ${GOOGLE_AUTH} | base64 -i --decode > ${HOME}/gcp-key.json
+            gcloud --quiet components update
+            gcloud --quiet components update kubectl
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set container/cluster $GOOGLE_CLUSTER_NAME
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+      - setup_remote_docker
+      - deploy:
+          name: Deploy to Kubernetes if tests pass
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              source ~/google-cloud-sdk/path.bash.inc
+              docker build -t gcr.io/${GOOGLE_PROJECT_ID}/auth:build-$CIRCLE_BUILD_NUM .
+              # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
+              docker tag gcr.io/${GOOGLE_PROJECT_ID}/auth:build-$CIRCLE_BUILD_NUM gcr.io/${GOOGLE_PROJECT_ID}/auth:latest
+              gcloud docker -- push gcr.io/${GOOGLE_PROJECT_ID}/auth:build-$CIRCLE_BUILD_NUM
+              # sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
+              kubectl set image deployment/$DEPLOYMENT_NAME $CONTAINER_NAME=gcr.io/${GOOGLE_PROJECT_ID}/auth:build-$CIRCLE_BUILD_NUM --namespace=micro-services
+            fi
