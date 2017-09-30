@@ -6,6 +6,7 @@ const User = require('../models').user;
 const config = require('../config');
 
 module.exports = (req, res, next) => {
+  console.log('loadUser policy');
   req.options = req.options || {};
   // start with setting user to UNAUTHENTICATED
   req.options.user = { type: constants.USER_UNAUTHENTICATED };
@@ -38,12 +39,13 @@ module.exports = (req, res, next) => {
     }]
   })
   .then(record => {
-    if (!record) res.status(401).send(constants.ACCESS_TOKEN_INVALID);
+    if (!record) return res.status(401).send(constants.ACCESS_TOKEN_INVALID);
     req.options.user = record.user;
     req.options.user.type = record.user.roles === 'admin'
       ? constants.USER_ADMIN
       : constants.USER_AUTHENTICATED;
-    next();
+
+    return next();
   })
   .catch(next);
 };
