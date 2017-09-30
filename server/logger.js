@@ -1,5 +1,7 @@
 const winston = require('winston');
 const { notification } = require('./services');
+const { LOG_DIR } = require('./config').paths;
+const path = require('path');
 
 const config = {
   levels: {
@@ -38,7 +40,7 @@ const logger = new (winston.Logger)({
       json: true,
     }),
     new (winston.transports.File)({
-      filename: './logs/json.log',
+      filename: path.join(LOG_DIR, '/auth-uncaughtExceptions.log'),
       level: 'info',
       maxsize: 5242880, // 5MB
       maxFiles: 5,

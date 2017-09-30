@@ -19,5 +19,8 @@ module.exports = {
       username: 'arkraiders',
       password: process.env.BASIC_AUTH_PASSWORD || 'auth'
     }
+  },
+  paths: {
+    LOG_DIR: process.env.LOG_DIR || './logs'
   }
 };
