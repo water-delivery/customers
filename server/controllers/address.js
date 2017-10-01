@@ -7,6 +7,7 @@ module.exports = {
       where: {
         userId
       },
+      order: '"updatedAt" DESC'
     })
     .then(res.ok)
     .catch(res.negotiate);
