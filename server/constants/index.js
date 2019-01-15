@@ -40,5 +40,6 @@ module.exports = {
     code: 'INVALID_OTP',
     message: 'OTP is either expired or  invalid one. Please request for a new OTP before proceeding further'
   },
+  UNAUTHENTICATED_USER_HEADER: 'notSignedIn'
 };
 

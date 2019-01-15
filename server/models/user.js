@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     avatar: DataTypes.STRING,
     contact: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       unique: true,
       isNumeric: true,
       max: 10,
