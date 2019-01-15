@@ -1,7 +1,7 @@
 {
-  "name": "ProjectX",
+  "name": "Customers",
   "version": "1.0.0",
-  "description": "Water Delivery App",
+  "description": "Service to manage customers",
   "main": "server.js",
   "author": "Phanindra <phanindra.nitw@gmail.com>",
   "license": "MIT",
