@@ -23,7 +23,7 @@ module.exports = {
   generateRandomNumber: (length = 4) => {
     if (length > 10) return undefined;
     // const offset = (10 ** (length - 1));
-    const offset = Math.pow(10, length - 1);
+    const offset = Math.pow(10, length - 1); // eslint-disable-line
     const min = offset;
     const max = 9 * offset;
     return Math.floor(min + (Math.random() * max));

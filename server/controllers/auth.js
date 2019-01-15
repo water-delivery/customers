@@ -58,21 +58,19 @@ module.exports = {
           userId: user.id,
           device: meta && meta.device
         })
-        .then(newToken => {
-          return next(null, {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            avatar: user.avatar,
-            contact: user.contact,
-            description: user.description,
-            email: user.email,
-            roles: user.roles,
-            accessToken: newToken.token
-          });
-        })
+        .then(newToken => next(null, {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          avatar: user.avatar,
+          contact: user.contact,
+          description: user.description,
+          email: user.email,
+          roles: user.roles,
+          accessToken: newToken.token
+        }))
         .catch(next);
       },
-    ], function final(error, user) {
+    ], (error, user) => {
       if (error) {
         if (error.name) {
           switch (error.name) {

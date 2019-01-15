@@ -11,4 +11,4 @@ module.exports = (res) => (data) => {
     };
   }
   return res.status(status).json(message);
-}
+};

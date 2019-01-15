@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  isServiceAccount,
   validations,
 } = require('../policies');
 
