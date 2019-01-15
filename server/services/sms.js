@@ -21,7 +21,7 @@ module.exports = {
     // Prints the complete response
     return new Promise((resolve, reject) => {
       p.send_message(params, (status, response) => {
-        console.log('Message response status: ', status);
+        logger.info('Message response status: ', status);
         if (status >= 400) return reject({ status, response });
         return resolve({ status, response });
       });

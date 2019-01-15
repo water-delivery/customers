@@ -6,7 +6,7 @@ const User = require('../models').user;
 const config = require('../config');
 
 module.exports = (req, res, next) => {
-  console.log('loadUser policy');
+  logger.info('loadUser policy');
   req.options = req.options || {};
   // start with setting user to UNAUTHENTICATED
   req.options.user = { type: constants.USER_UNAUTHENTICATED };
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
     auth.pass === config.credentials.basicAuth.password;
 
   if (isServiceAccount) {
-    console.log(auth, config.credentials.basicAuth);
+    logger.info(auth, config.credentials.basicAuth);
     req.options.user = {
       type: constants.USER_SERVICE_ACCOUNT,
     };

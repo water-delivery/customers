@@ -12,7 +12,7 @@ const redisClient = redis.createClient(
     auth_pass: nconf.get('redisKey') || redisConfig.redisKey,
     return_buffers: true
   }
-).on('error', (err) => console.error('ERR:REDIS:', err));
+).on('error', (err) => logger.error('ERR:REDIS:', err));
 
 const typeMissingError = new Error('required parameter type missing');
 const typeNotSupportedError = new Error('given type is not supported');

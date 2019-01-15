@@ -6,7 +6,7 @@ const {
 
 const adminLevelTypes = [USER_SERVICE_ACCOUNT, USER_ADMIN];
 module.exports = (req, res, next) => {
-  console.log('isAdmin Policy running');
+  logger.info('isAdmin Policy running');
   if (req.options && adminLevelTypes.includes(req.options.user.type)) return next();
 
   return res.status(401).send(AUTHENTICATION_NEEDED_AS_ADMIN);

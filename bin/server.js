@@ -6,4 +6,4 @@ const port = parseInt(process.env.PORT, 10) || 6100;
 app.set('port', port);
 
 const server = http.createServer(app);
-server.listen(port, () => console.log('Server listening on port: ', port));
+server.listen(port, () => logger.info('Server listening on port: ', port));
