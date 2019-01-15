@@ -8,7 +8,9 @@
   "scripts": {
     "start:dev": "nodemon ./bin/server.js",
     "start": "node ./bin/server.js",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "lint": "eslint bin server test",
+    "test": "npm run lint && NODE_ENV=test istanbul cover _mocha",
+    "test:watch": "NODE_ENV=test istanbul cover _mocha -- -w"
   },
   "dependencies": {
     "async": "^2.5.0",
@@ -28,11 +30,17 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-loader": "^1.8.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.0.1",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "faker": "^4.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.3",
+    "sinon": "^4.0.0",
+    "supertest": "^3.0.0"
   }
 }
